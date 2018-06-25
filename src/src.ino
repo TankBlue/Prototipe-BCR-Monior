@@ -54,42 +54,45 @@ void setup_lcd()
 
   //Papan Judul
   lcd.setCursor(0, 0);          //Atur kursor lcd pada baris ke 1 dan kolom ke 1
-  lcd.print("Hello, ARDUINO "); //Menmpilkan info, silahkan diubah
+  lcd.print("Hello, ARDUINO "); //Menampilkan info, silahkan diubah
   lcd.setCursor(0, 1);          //Atur kursor lcd pada baris ke 2 dan kolom ke 1
-  lcd.print("Hello, ARDUINO "); //Menmpilkan info, silahkan diubah
+  lcd.print("Hello, ARDUINO "); //Menampilkan info, silahkan diubah
 }
 
 //Fungsi info_lcd, menampilakn pembacaan sensor2
 void info_lcd()
 {
   lcd.setCursor(0, 0);      //Atur kursor lcd pada baris ke 1 dan kolom ke 1
-  lcd.print("V_BATT   : "); //Menmpilkan info, silahkan diubah
+  lcd.print("V_BATT   : "); //Menampilkan info, silahkan diubah
   lcd.print(cari_tegangan(2));
+  lcd.setCursor(15, 0);                                 //Atur kursor lcd pada baris ke 1 dan kolom ke 16
+  int level_batt = map(level_batt, 12.7, 13.7, 0, 100); //Mapping pembacaan tegangan ke persentase; variable tegangan,tegangan terendah, tegangan tertinggi, persentase terendah,  persentase tertinggi
+  lcd.print(level_batt);                                //Menampilkan persentase battery level
 
   lcd.setCursor(0, 1);      //Atur kursor lcd pada baris ke 2 dan kolom ke 1
-  lcd.print("V_INSIDE : "); //Menmpilkan info, silahkan diubah
+  lcd.print("V_SURYA  : "); //Menampilkan info, silahkan diubah
   lcd.print(cari_tegangan(1));
 
   lcd.setCursor(0, 2);      //Atur kursor lcd pada baris ke 3 dan kolom ke 1
-  lcd.print("V_KIRCIR : "); //Menmpilkan info, silahkan diubah
+  lcd.print("V_KINCIR : "); //Menampilkan info, silahkan diubah
   lcd.print(cari_tegangan(0));
 
   lcd.setCursor(0, 3);      //Atur kursor lcd pada baris ke 4 dan kolom ke 1
-  lcd.print("ARUS     : "); //Menmpilkan info, silahkan diubah
+  lcd.print("ARUS     : "); //Menampilkan info, silahkan diubah
   lcd.print(cari_arus(3));
 }
 
 //Fungsi cari_tegangan, menghitung pembacaan tegangan dari PIN ANALOG
 //Menggunakan rumus hitung tegangan dengan metode VOLTAGE DIVIDER
-//Membaca sampel data dari PIN ANALOG  
+//Membaca sampel data dari PIN ANALOG
 float cari_tegangan(int pin)
 {
 
   //Konfigurasi variable - variable
   float vout = 0.0;
   float vin = 0.0;
-  float R1 = 30000.0; //Nilai resistor 1 30K
-  float R2 = 7500.0;  //Nilai resistor 2 7.5K
+  float R1 = 30000.0;  //Nilai resistor 1 30K
+  float R2 = 7500.0;   //Nilai resistor 2 7.5K
 #define NUM_SAMPLES 10 //Variable jumlah sample data yg akan diambil, kali
   int sum = 0;
   unsigned char sample_count = 0;
@@ -101,7 +104,7 @@ float cari_tegangan(int pin)
     sample_count++;
   }
 
-  voltage = (((float)sum / (float)NUM_SAMPLES * readVcc()) / 1024.0); 
+  voltage = (((float)sum / (float)NUM_SAMPLES * readVcc()) / 1024.0);
   return voltage / (R2 / (R1 + R2));
   sample_count = 0;
   sum = 0;
@@ -111,9 +114,9 @@ float cari_tegangan(int pin)
 float cari_arus(int pin)
 {
   //Konfigurasi variable - variable
-  int mVperAmp = 66;
+  int mVperAmp = 66; // Data 66 dari DATASHEET sensor
   int RawValue = 0;
-  int ACSoffset = 2500;
+  int ACSoffset = 2500; // Data 2500 dari DATASHEET sensor
   double Voltage = 0;
   double Amps = 0;
   double Vcc;
