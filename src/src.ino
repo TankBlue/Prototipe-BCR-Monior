@@ -1,3 +1,7 @@
+//Konfigurasi variable - variable sebelum panggi library
+#define ESP8266_BAUD 9600
+#define BLYNK_PRINT Serial
+
 //Panggil library yang dibutuhkan
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -7,10 +11,8 @@
 #include <SoftwareSerial.h>
 
 //Konfigurasi variable - variable
-#define ESP8266_BAUD 115200
-#define BLYNK_PRINT Serial
 SimpleTimer timer;
-SoftwareSerial EspSerial(2, 3); //Konfigurasi PIN SoftSerial
+SoftwareSerial EspSerial(3, 2); //Konfigurasi PIN SoftSerial
 ESP8266 wifi(&EspSerial);
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); //Konfigurasi ADDRESS LCD i2c
 
@@ -18,23 +20,23 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); //Konfigurasi ADD
 char auth[] = "6e42cc7dcc3b42349a1a53c895c30a08";
 
 //Konfigurasi Wifi
-char ssid[] = "TPLink";
+char ssid[] = "hasanbasri93";
 char pass[] = "123456789";
 
 void setup()
 {
   Serial.begin(9600); //Memulai BAUDRATE SerialHard DEBUG
   setup_lcd();        //Memulai LCD i2c
-  //EspSerial.begin(ESP8266_BAUD); //Memulai BAUDRATE SerialSoft ESP
-  //Blynk.begin(auth, wifi, ssid, pass); //Memulai menghubing ke server BLYNK
+  EspSerial.begin(ESP8266_BAUD); //Memulai BAUDRATE SerialSoft ESP
+  Blynk.begin(auth, wifi, ssid, pass); //Memulai menghubing ke server BLYNK
   timer.setInterval(1000, info_lcd); //Konfigurasi, memanggail funsgi info_lcd per 1 detik
-  //timer.setInterval(1000, kirim_data); //Konfigurasi, memanggail funsgi kirim_data per 1 detik
+  timer.setInterval(1000, kirim_data); //Konfigurasi, memanggail funsgi kirim_data per 1 detik
 }
 
 void loop()
 {
   timer.run(); //Menjalankan timer
-  //Blynk.run(); //Menjalankan BLYNK
+  Blynk.run(); //Menjalankan BLYNK
 }
 
 //Fungsi kirim_data, mengirim data ke server BLYNK
